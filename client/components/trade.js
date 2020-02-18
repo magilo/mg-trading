@@ -11,7 +11,8 @@ class Trade extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      tradeHistory: ''
+      stock: '',
+      transactions: ''
     }
     this.props = this.props
     this.handleChange = this.handleChange.bind(this)
@@ -24,79 +25,101 @@ class Trade extends React.Component {
     })
   }
   handleSubmit(event) {
-    const {user} = this.props
+    // const { user } = this.props
     event.preventDefault()
 
-    const updatedUser = {
-      username: this.state.username || user.username,
-      name: this.state.name || user.name,
-      address: this.state.address || user.address,
-      email: this.state.email || user.email,
-      profileImgUrl: this.state.profileImgUrl || user.profileImgUrl,
-      id: user.id //<-- needs id to be pass from props into thunk
-    }
-    console.log('handlesubmit: ', updatedUser)
-    this.props.editUserThunk(updatedUser)
-    this.setState({
-      username: '',
-      name: '',
-      email: '',
-      address: '',
-      profileImgUrl: ''
-    })
+    // this.setState({ stock: event.target.value })
+    // const currentStock = {
+    //   stock: this.state.stock || 'no stock yet',
+    //   transactions: this.state.transactions || "no transactions"
+    // }
+    console.log('props in handlesubmit', this.props)
+    console.log('this state in handlesubmit: ', this.state)
+    this.props.getStock(this.state.stock)
+    // this.props.editUserThunk(updatedUser)
+    // this.setState({
+    //   username: '',
+    //   name: '',
+    //   email: '',
+    //   address: '',
+    //   profileImgUrl: ''
+    // })
   }
 
   render() {
-    const {user} = this.props
+    // const { stok } = this.props
+    // console.log('trade props', this.props)
     return (
       <div>
-        <h2>Welcome, {user.username}</h2>
-        {/* <h3>Welcome, {user.email}</h3> */}
-        Name: {user.name} <br />
-        <p>Email: {user.email}</p>
-        <br />
-        address: {user.address}
-        <br />
-        Profile Img: <img className="profileImage" src={user.profileImgUrl} />
-        <br />
+        <h2>TRADE</h2>
+        <div className="form">
+          <form onSubmit={this.handleSubmit}>
+            <div>
+              {/* <label htmlFor="symbol">
+                <small>symb</small>
+              </label> */}
+              <input
+                name="stock"
+                type="text"
+                value={this.state.stock}
+                // value="enter symbol here"
+                placeholder="e.g. AAPL"
+                onChange={this.handleChange}
+              />
+            </div>
+
+            <div>
+              <button type="submit" onSubmit={this.handleSubmit}>
+                search
+              </button>
+            </div>
+          </form>
+        </div>
+        {/* <br />
         <Link to="/home/edit">Edit your account</Link>
         <br />
         <Link to="/home/history">Past Orders</Link>
-        <hr />
-        <Route
-          path="/home/edit"
-          render={() => (
-            <EditUserForm
-              handleChange={this.handleChange}
-              handleSubmit={this.handleSubmit}
-              user={this.state}
-            />
-          )}
-        />
-        <Route path="/home/history" render={() => <OrderHistory />} />
+        <hr /> */}
+
+        {/* <SymbolSearch
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+          props={this.state}
+        /> */}
+
+        {/* <Route path="/home/history" render={() => <OrderHistory />} /> */}
       </div>
     )
   }
 }
 
-export default Trade
+// export default Trade
 
+const mapDispatchToProps = dispatch => {
+  return {
+    // getStock: (symbol) => this.setState({ stock: symbol })
+    getStock: symbol => console.log('symbol is:', symbol)
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Trade)
 /**
  * CONTAINER
  */
 // const mapState = state => {
 //   return {
-//     user: state.user
+//     stock: state.stock
 //   }
 // }
 
 // const mapDispatchToProps = dispatch => {
 //   return {
-//     editUserThunk: user => dispatch(editUserThunk(user))
+//     // editUserThunk: user => dispatch(editUserThunk(user))
+//     getStock: (symbol) => console.log('symbol is:', symbol)
 //   }
 // }
 
-// export default connect(mapState, mapDispatchToProps)(UserHome)
+// export default connect(mapState, mapDispatchToProps)(Trade)
 
 /**
  * COMPONENT
