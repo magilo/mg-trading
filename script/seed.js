@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('../server/db')
-const {User} = require('../server/db/models')
+const {User, Portfolio} = require('../server/db/models')
 
 async function seed() {
   await db.sync({force: true})
@@ -13,6 +13,28 @@ async function seed() {
   ])
 
   console.log(`seeded ${users.length} users`)
+  console.log(`seeded successfully`)
+
+  const myPortfolio = [
+    {
+      name: 'Basic Stock',
+      description: 'get your head in the game',
+      price: 10
+    },
+    {
+      name: 'Advanced Stock',
+      description: 'in too deep now',
+      price: 100
+    }
+  ]
+
+  const returnedPortfolio = await Promise.all(
+    myPortfolio.map(portfolio => {
+      return Portfolio.create(portfolio)
+    })
+  )
+
+  console.log(`seeded ${returnedPortfolio} myPortfolio`)
   console.log(`seeded successfully`)
 }
 

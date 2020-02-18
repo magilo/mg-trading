@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
 
+//holds each stock as a row
+
 const Portfolio = db.define('portfolio', {
   name: {
     type: Sequelize.STRING,
