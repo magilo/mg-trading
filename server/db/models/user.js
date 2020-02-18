@@ -3,6 +3,16 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 
 const User = db.define('user', {
+  balance: {
+    type: Sequelize.INTEGER,
+    defaultValue: '500000',
+    validate: {
+      min: 0
+    },
+    get() {
+      return this.getDataValue('balance') / 100
+    }
+  },
   email: {
     type: Sequelize.STRING,
     unique: true,
