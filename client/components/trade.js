@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
+import {loadQuoteThunk} from '../store'
 // import SymbolSearch from './symbol-search'
 
 /**
@@ -12,11 +13,17 @@ class Trade extends React.Component {
     super(props)
     this.state = {
       stock: '',
-      transactions: ''
+      quantity: '',
+      transactions: '',
+      errors: {
+        stock: '',
+        quantity: ''
+      }
     }
     this.props = this.props
     this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleSearchSubmit = this.handleSearchSubmit.bind(this)
+    this.handleBuySubmit = this.handleBuySubmit.bind(this)
   }
 
   handleChange(event) {
@@ -24,24 +31,58 @@ class Trade extends React.Component {
       [event.target.name]: event.target.value
     })
   }
-  handleSubmit(event) {
+
+  handleSearchSubmit(event) {
     event.preventDefault()
 
-    console.log('props in handlesubmit', this.props)
-    console.log('this state in handlesubmit: ', this.state)
+    // console.log('props in handlesubmit', this.props)
+    // console.log('this state in handlesubmit: ', this.state)
     this.props.getStock(this.state.stock)
     this.setState({
-      stock: '',
-      transactions: ''
+      stock: ''
+    })
+  }
+
+  handleBuySubmit(event) {
+    event.preventDefault()
+    // const { name, value } = event.target;
+    console.log('props in handlesubmit', this.props)
+    console.log('this state in handlesubmit: ', this.state)
+
+    let errors = this.state.errors
+
+    //add quantity and symbol validation here
+    if (!this.props.stock.symbol) {
+      console.log('nostock')
+      errors.stock = 'no stock selected'
+    } else {
+      console.log('there is a stock')
+      errors.stock = ''
+    }
+
+    this.setState({errors: {stock: errors.stock}}, () => {
+      console.log(errors)
+    })
+
+    this.props.buyStock(this.state.quantity)
+    this.setState({
+      quantity: ''
     })
   }
 
   render() {
+    // console.log('local state', this.state)
+    const {errors} = this.state
+    const stock = this.props.stock
     return (
       <div>
         <h2>TRADE</h2>
+        <div>
+          <h5>stock: {stock.symbol}</h5>
+          <h5>latest price: {stock.latestPrice} </h5>
+        </div>
         <div className="form">
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSearchSubmit}>
             <div>
               <input
                 name="stock"
@@ -53,9 +94,32 @@ class Trade extends React.Component {
             </div>
 
             <div>
-              <button type="submit" onSubmit={this.handleSubmit}>
+              <button type="submit" onSubmit={this.handleSearchSubmit}>
                 search
               </button>
+            </div>
+          </form>
+
+          <form onSubmit={this.handleBuySubmit}>
+            <div>
+              <input
+                name="quantity"
+                type="text"
+                value={this.state.quantity}
+                placeholder="e.g. 5"
+                onChange={this.handleChange}
+              />
+            </div>
+
+            <div>
+              <button type="submit" onSubmit={this.handleBuySubmit}>
+                buy
+              </button>
+            </div>
+            <div>
+              {errors.stock.length > 0 && (
+                <span className="error">{errors.stock}</span>
+              )}
             </div>
           </form>
         </div>
@@ -73,13 +137,21 @@ class Trade extends React.Component {
 
 // export default Trade
 
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = state => {
   return {
-    getStock: symbol => console.log('symbol is:', symbol)
+    stock: state.stock
   }
 }
 
-export default connect(null, mapDispatchToProps)(Trade)
+const mapDispatchToProps = dispatch => {
+  return {
+    // getStock: symbol => console.log('symbol is:', symbol)
+    getStock: symbol => dispatch(loadQuoteThunk(symbol)),
+    buyStock: quantity => console.log('qunatity', quantity)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Trade)
 /**
  * CONTAINER
  */
