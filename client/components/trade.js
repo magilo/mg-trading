@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {loadQuoteThunk} from '../store'
+import {loadQuoteThunk, userBalance} from '../store'
 // import SymbolSearch from './symbol-search'
 
 /**
@@ -20,6 +20,7 @@ class Trade extends React.Component {
         quantity: ''
       }
     }
+    // console.log('trade compo', this.props)
     this.props = this.props
     this.handleChange = this.handleChange.bind(this)
     this.handleSearchSubmit = this.handleSearchSubmit.bind(this)
@@ -57,14 +58,22 @@ class Trade extends React.Component {
       errors.stock = 'no stock selected'
     } else {
       console.log('there is a stock')
-      errors.stock = ''
+      // errors.stock = `total: ${total}`
+      // this.props.submitBuy(this.state.quantity)
+      const latestPrice = this.props.stock.latestPrice * 100
+      const total = this.state.quantity * latestPrice / 100
+      if (this.props.user.balance - total >= 0) {
+        console.log('can buy')
+        this.props.user.balance = this.props.user.balance - total
+      } else {
+        errors.stock = 'not enough cash'
+      }
     }
 
     this.setState({errors: {stock: errors.stock}}, () => {
       console.log(errors)
     })
 
-    this.props.buyStock(this.state.quantity)
     this.setState({
       quantity: ''
     })
@@ -74,9 +83,10 @@ class Trade extends React.Component {
     // console.log('local state', this.state)
     const {errors} = this.state
     const stock = this.props.stock
+    const balance = this.props.user.balance
     return (
       <div>
-        <h2>TRADE</h2>
+        <h2>TRADE balance: ${balance}</h2>
         <div>
           <h5>stock: {stock.symbol}</h5>
           <h5>latest price: {stock.latestPrice} </h5>
@@ -95,7 +105,8 @@ class Trade extends React.Component {
 
             <div>
               <button type="submit" onSubmit={this.handleSearchSubmit}>
-                search
+                {' '}
+                search{' '}
               </button>
             </div>
           </form>
@@ -139,7 +150,9 @@ class Trade extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    stock: state.stock
+    stock: state.stock,
+    user: state.user,
+    portfolio: state.portfolio
   }
 }
 
@@ -147,7 +160,9 @@ const mapDispatchToProps = dispatch => {
   return {
     // getStock: symbol => console.log('symbol is:', symbol)
     getStock: symbol => dispatch(loadQuoteThunk(symbol)),
-    buyStock: quantity => console.log('qunatity', quantity)
+    // buyStock: quantity => console.log('qunatity', quantity)
+    // submitBuy: quantity => dispatch(buyStock(quantity))
+    submitBuy: (user, total) => dispatch(userBalance(user, total))
   }
 }
 

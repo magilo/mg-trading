@@ -6,6 +6,7 @@ import history from '../history'
  */
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
+const STOCK_BOUGHT = 'STOCK_BOUGHT'
 
 /**
  * INITIAL STATE
@@ -17,6 +18,10 @@ const defaultUser = {}
  */
 const getUser = user => ({type: GET_USER, user})
 const removeUser = () => ({type: REMOVE_USER})
+const stockBought = user => ({
+  type: STOCK_BOUGHT,
+  user
+})
 
 /**
  * THUNK CREATORS
@@ -56,6 +61,18 @@ export const logout = () => async dispatch => {
   }
 }
 
+export const userBalance = (user, total) => async dispatch => {
+  try {
+    console.log('inside userBalance')
+    const res = await axios.put(`/api/users/${user.id}/balance`, user, total)
+    console.log('thunk data:', user, total)
+    console.log('thunk res', res)
+    dispatch(stockBought(user))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 /**
  * REDUCER
  */
@@ -65,6 +82,8 @@ export default function(state = defaultUser, action) {
       return action.user
     case REMOVE_USER:
       return defaultUser
+    case STOCK_BOUGHT:
+      return action.user
     default:
       return state
   }

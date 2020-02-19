@@ -1,5 +1,4 @@
 import axios from 'axios'
-// import { APIToken } from "../../../secrets";
 const {APIToken} = require('../../secrets')
 
 /**
