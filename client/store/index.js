@@ -5,11 +5,13 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 import user from './user'
 import {stockReducer} from './stock'
 import {portfolioReducer} from './portfolio'
+import {pricesReducer} from './prices'
 
 const reducer = combineReducers({
   user,
   stock: stockReducer,
-  portfolio: portfolioReducer
+  portfolio: portfolioReducer,
+  prices: pricesReducer
 })
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
@@ -20,3 +22,4 @@ export default store
 export * from './user'
 export * from './stock'
 export * from './portfolio'
+export * from './prices'

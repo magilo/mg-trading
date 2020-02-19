@@ -1,5 +1,6 @@
 const router = require('express').Router()
-const {User} = require('../db/models')
+const {User, Transaction} = require('../db/models')
+
 module.exports = router
 
 router.get('/', async (req, res, next) => {
@@ -40,9 +41,21 @@ router.get('/:userId/balance', async (req, res, next) => {
 router.put('/:userId/balance', async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.userId)
-    user.balance = req.body.balance
+    user.balance = req.body.balance * 100
     await user.save()
-    res.json(user)
+    // res.json(user)
+    res.sendStatus(200)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/:userId/transactions', async (req, res, next) => {
+  try {
+    const singleUser = await User.findByPk(req.params.userId, {
+      include: [{model: Transaction}]
+    })
+    res.json(singleUser.transactions)
   } catch (err) {
     next(err)
   }
