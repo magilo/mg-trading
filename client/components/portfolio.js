@@ -8,43 +8,55 @@ import {loadMyStocksThunk, loadQuoteThunk, loadAllPricesThunk} from '../store'
  */
 
 class Portfolio extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      prices: this.props.prices
-    }
-  }
+  // constructor(props) {
+  //   super(props)
+  //   this.state = {
+  //     prices: this.props.prices
+  //   }
+  // }
 
   componentDidMount() {
     // console.log('this.props', this.props)
     this.props.loadMyStocks(this.props.user)
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    console.log('derived next', nextProps)
-    console.log('derived prev', prevState)
-    console.log('derived keys len', Object.keys(nextProps.prices).length)
-    // if (prevState.prices.length >= 0) {
-    // if (JSON.stringify(nextProps.prices) !== JSON.stringify(prevState.prices)) {
-    // if (Object.keys(nextProps.prices).length !== nextProps.portfolio.length) {
-    if (
-      Object.keys(nextProps.prices).length === 0 &&
-      nextProps.portfolio.length > 0
-    ) {
-      const prices = nextProps.loadAllPrices(nextProps.portfolio)
-      console.log('derived prices', prices)
-      // this.setState({ stockPrices: prices })
-      // console.log('stockPrices', this.state.stockPrices)
-      return {prices: nextProps.prices}
-    } else {
-      return null
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.portfolio.length !== prevProps.portfolio.length) {
+      // this.fetchData(this.props.userID);
+      console.log('didUpdate prev', prevProps.portfolio.length)
+      console.log('didUpdate this', this.props.portfolio.length)
+      const prices = this.props.loadAllPrices(this.props.portfolio)
+      console.log('didupdate prices', prices)
     }
   }
+
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   console.log('derived next', nextProps)
+  //   console.log('derived prev', prevState)
+  //   console.log('derived keys len', Object.keys(nextProps.prices).length)
+  //   // if (prevState.prices.length >= 0) {
+  //   // if (JSON.stringify(nextProps.prices) !== JSON.stringify(prevState.prices)) {
+  //   // if (Object.keys(nextProps.prices).length !== nextProps.portfolio.length) {
+  //   if (Object.keys(nextProps.prices).length === 0 && nextProps.portfolio.length > 0) {
+  //     const prices = nextProps.loadAllPrices(nextProps.portfolio)
+  //     console.log('derived prices', prices)
+  //     // this.setState({ stockPrices: prices })
+  //     // console.log('stockPrices', this.state.stockPrices)
+  //     return { prices: nextProps.prices };
+  //   } else {
+  //     return null
+  //   }
+
+  // }
 
   render() {
     // console.log('portfolio state', this.state)
     const portfolio = this.props.portfolio
+    const prices = this.props.prices
     console.log('portfolio props', portfolio)
+    console.log('prices props', this.props.prices)
+
     // portfolio = {
     //   AAPL: {qty: 2, quote: {…}},
     //   SE: {qty: 5, quote: {…}}
@@ -58,6 +70,17 @@ class Portfolio extends Component {
             <div className="SinglePortfolio" key={stock.symbol}>
               <h2>
                 {stock.symbol} qty: {stock.qty}
+                latest price: {prices[stock.symbol]}
+              </h2>
+            </div>
+          ))}
+        </div>
+        <div className="QuoteTest">
+          {prices.map(stock => (
+            <div className="SinglePortfolio" key={stock.symbol}>
+              <h2>
+                {stock.symbol}
+                latest price: {stock.latestPrice}
               </h2>
             </div>
           ))}

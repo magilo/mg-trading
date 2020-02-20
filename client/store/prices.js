@@ -20,20 +20,31 @@ export const loadAllPricesThunk = portfolio => async dispatch => {
   try {
     // console.log('inside loadMyStocks')
     //portfolio is an array
-    let myStockPrices = {}
+    // let myStockPrices = {}
 
-    portfolio.forEach(async function(stock) {
-      const symbol = stock.symbol
-      const getQuote = await axios.get(
-        `https://cloud.iexapis.com/stable/stock/${symbol}/quote?token=${APIToken}`
-      )
-      myStockPrices[symbol] = {
-        qty: stock.qty,
-        latestPrice: getQuote.data.latestPrice
-      }
-    })
-    console.log('myPortfolio', myStockPrices)
-    dispatch(getAllPrices(myStockPrices))
+    let getQuotes = await Promise.all(
+      portfolio.map(async function(stock) {
+        const symbol = stock.symbol
+        let {data} = await axios.get(
+          `https://cloud.iexapis.com/stable/stock/${symbol}/quote?token=${APIToken}`
+        )
+        return data
+      })
+    )
+
+    // portfolio.forEach(async function(stock) {
+    //   const symbol = stock.symbol
+    //   const getQuote = await axios.get(
+    //     `https://cloud.iexapis.com/stable/stock/${symbol}/quote?token=${APIToken}`
+    //   )
+    //   myStockPrices[symbol] = {
+    //     qty: stock.qty,
+    //     latestPrice: getQuote.data.latestPrice
+    //   }
+    // })
+    console.log('getQuotes', getQuotes)
+    // console.log('myPortfolio', myStockPrices)
+    dispatch(getAllPrices(getQuotes))
 
     // let myPortfolio = data.map(async function (stock) {
     //   const symbol = stock.symbol
@@ -54,7 +65,7 @@ export const loadAllPricesThunk = portfolio => async dispatch => {
   }
 }
 
-export function pricesReducer(prices = {}, action) {
+export function pricesReducer(prices = [], action) {
   switch (action.type) {
     case STOCK_PRICES:
       return action.prices
