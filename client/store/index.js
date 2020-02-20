@@ -6,12 +6,14 @@ import user from './user'
 import {stockReducer} from './stock'
 import {portfolioReducer} from './portfolio'
 import {pricesReducer} from './prices'
+import {valuationReducer} from './valuation'
 
 const reducer = combineReducers({
   user,
   stock: stockReducer,
   portfolio: portfolioReducer,
-  prices: pricesReducer
+  prices: pricesReducer,
+  valuation: valuationReducer
 })
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
@@ -23,3 +25,4 @@ export * from './user'
 export * from './stock'
 export * from './portfolio'
 export * from './prices'
+export * from './valuation'
