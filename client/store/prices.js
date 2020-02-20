@@ -21,10 +21,10 @@ export const loadAllPricesThunk = portfolio => async dispatch => {
     // console.log('inside loadMyStocks')
     //portfolio is an array
     // let myStockPrices = {}
-
+    console.log('pricesthunk portfolio', portfolio)
     let getQuotes = await Promise.all(
-      portfolio.map(async function(stock) {
-        const symbol = stock.symbol
+      Object.keys(portfolio).map(async function(symbol) {
+        // const symbol = stock
         let {data} = await axios.get(
           `https://cloud.iexapis.com/stable/stock/${symbol}/quote?token=${APIToken}`
         )

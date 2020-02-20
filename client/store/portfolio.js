@@ -35,13 +35,20 @@ export const loadMyStocksThunk = user => async dispatch => {
   try {
     // console.log('inside loadMyStocks')
     const {data} = await axios.get(`/api/users/${user.id}/transactions`)
-    let myPortfolio = data.map(function(stock) {
+    let myPortfolio = {}
+    data.forEach(function(stock) {
       const symbol = stock.symbol
-      return {
-        symbol: stock.symbol,
+      myPortfolio[symbol] = {
         qty: stock.qty
       }
     })
+    // let myPortfolio = data.map(function(stock) {
+    //   const symbol = stock.symbol
+    //   return {
+    //     symbol: stock.symbol,
+    //     qty: stock.qty
+    //   }
+    // })
     // console.log('thunk data:', data)
     // let myPortfolio = {}
     // data.forEach(async function (stock) {
@@ -105,7 +112,7 @@ export const loadMyStocksThunk = user => async dispatch => {
 /**
  * REDUCER
  */
-export function portfolioReducer(portfolio = [], action) {
+export function portfolioReducer(portfolio = {}, action) {
   switch (action.type) {
     case STOCK_OWNED:
       // console.log('inside portfolioReducer', action)
