@@ -60,14 +60,27 @@ router.get('/:userId/transactions', async (req, res, next) => {
     next(err)
   }
 })
-// router.put('/:userId/balance', async (req, res, next) => {
-//   try {
-//     const singleUser = await User.findByPk(req.params.userId)
-//     const balanceOnly = {
-//       balance: singleUser.balance
-//     }
-//     res.sendStatus(200)
-//   } catch (err) {
-//     next(err)
-//   }
-// })
+
+router.post('/:userId/transactions', async (req, res, next) => {
+  try {
+    //create new row on transaction table and associate w/ user
+    // set the order date
+    const now = new Date()
+    const formatPrice = req.body.purchasePrice * 100
+    const transaction = await Transaction.create({
+      symbol: req.body.symbol,
+      qty: req.body.qty,
+      purchasePrice: formatPrice,
+      orderDate: now,
+      orderDateTest: now
+      // userId: req.params.userId
+    })
+
+    const singleUser = await User.findByPk(req.params.userId)
+    transaction.setUser(singleUser)
+    console.log('inside post transactions router')
+    res.json(transaction)
+  } catch (err) {
+    next(err)
+  }
+})
