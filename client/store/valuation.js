@@ -19,7 +19,7 @@ export const getTotalValue = valuation => ({
 /**
  * REDUCER
  */
-export function valuationReducer(valuation = '', action) {
+export function valuationReducer(valuation = {totalValue: ''}, action) {
   switch (action.type) {
     case TOTAL_VALUE:
       return action.valuation
