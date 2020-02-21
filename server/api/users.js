@@ -129,17 +129,18 @@ router.put('/:userId/portfolio', async (req, res, next) => {
         stockId: stock[0].id
       }
     }
+
     const currStock = await Portfolio.findOne(selector)
     const currQty = currStock.qty
-    let newQty
+    let newQty = currQty + parseInt(req.body.qty)
     // console.log('currQty', typeof (currQty))
     // console.log('req.body.qty', typeof (req.body.qty))
 
-    if (currQty === null) {
-      newQty = parseInt(req.body.qty)
-    } else {
-      newQty = currQty + parseInt(req.body.qty)
-    }
+    // if (currQty === null) {
+    //   newQty = parseInt(req.body.qty)
+    // } else {
+    //   newQty = currQty + parseInt(req.body.qty)
+    // }
 
     await Portfolio.update({qty: newQty}, selector)
 

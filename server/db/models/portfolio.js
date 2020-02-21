@@ -5,20 +5,12 @@ const db = require('../db')
 
 const Portfolio = db.define('portfolio', {
   qty: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
+    defaultValue: '0',
+    validate: {
+      min: 0
+    }
   }
 })
-// const Portfolio = db.define('portfolio', {
-//   symbol: {
-//     type: Sequelize.STRING,
-//     allowNull: false,
-//     validate: {
-//       notEmpty: true
-//     }
-//   },
-//   qty: {
-//     type: Sequelize.INTEGER,
-//   },
-// })
 
 module.exports = Portfolio

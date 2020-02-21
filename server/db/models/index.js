@@ -10,18 +10,11 @@ const Stock = require('./stock')
  *    BlogPost.belongsTo(User)
  */
 
-//make portfolio from transactions
 Transaction.belongsTo(User)
 User.hasMany(Transaction)
 
 Stock.belongsToMany(User, {through: Portfolio})
 User.belongsToMany(Stock, {through: Portfolio})
-// User.hasMany(Stock, { through: Portfolio })
-// Cart.belongsToMany(Treehouse, {through: TreehouseCart})
-// Stock.belongsTo(User)
-
-// Portfolio.belongsTo(User)
-// User.hasOne(Portfolio)
 
 /**
  * We'll export all of our models here, so that any time a module needs a model,
