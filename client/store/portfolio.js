@@ -1,11 +1,11 @@
 import axios from 'axios'
 // import { APIToken } from "../../../secrets";
-const {APIToken} = require('../../secrets')
+// const { APIToken } = require('../../secrets')
 
 /**
  * ACTION TYPES
  */
-const STOCK_OWNED = 'STOCK_OWNED'
+// const STOCK_OWNED = 'STOCK_OWNED'
 // const STOCK_PRICES = 'STOCK_PRICES'
 const GET_PORTFOLIO = 'GET_PORTFOLIO'
 const ADD_STOCK = 'ADD_STOCK'
@@ -14,10 +14,10 @@ const ADD_STOCK = 'ADD_STOCK'
  * ACTION CREATORS
  */
 
-const getStockOwned = portfolio => ({
-  type: STOCK_OWNED,
-  portfolio
-})
+// const getStockOwned = portfolio => ({
+//   type: STOCK_OWNED,
+//   portfolio
+// })
 
 const getMyPortfolio = portfolio => ({
   type: GET_PORTFOLIO,
@@ -40,31 +40,39 @@ const addBoughtStock = stock => ({
 export const loadPortfolioThunk = user => async dispatch => {
   try {
     // console.log('loadPortfolioThunk')
-    const res = await axios.get(`/api/users/${user.id}/portfolio`)
+    const {data} = await axios.get(`/api/users/${user.id}/portfolio`)
 
-    console.log('loadPortfolioThunk res', res)
-    dispatch(getMyPortfolio(res))
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-export const loadMyStocksThunk = user => async dispatch => {
-  try {
-    // console.log('inside loadMyStocks')
-    const {data} = await axios.get(`/api/users/${user.id}/transactions`)
+    // console.log('loadPortfolioThunk res', res)
     let myPortfolio = {}
     data.forEach(function(stock) {
       const symbol = stock.symbol
+      const currQty = stock.portfolio.qty
       myPortfolio[symbol] = {
-        qty: stock.qty
+        qty: currQty
       }
     })
-    dispatch(getStockOwned(myPortfolio))
+    dispatch(getMyPortfolio(myPortfolio))
   } catch (err) {
     console.error(err)
   }
 }
+
+// export const loadMyStocksThunk = user => async dispatch => {
+//   try {
+//     // console.log('inside loadMyStocks')
+//     const { data } = await axios.get(`/api/users/${user.id}/transactions`)
+//     let myPortfolio = {}
+//     data.forEach(function (stock) {
+//       const symbol = stock.symbol
+//       myPortfolio[symbol] = {
+//         qty: stock.qty
+//       }
+//     })
+//     dispatch(getStockOwned(myPortfolio))
+//   } catch (err) {
+//     console.error(err)
+//   }
+// }
 
 export const addStockToPortfolioThunk = (
   user,
@@ -85,13 +93,13 @@ export const addStockToPortfolioThunk = (
  */
 export function portfolioReducer(portfolio = {}, action) {
   switch (action.type) {
-    case STOCK_OWNED:
-      return action.portfolio
+    // case STOCK_OWNED:
+    //   return action.portfolio
     case GET_PORTFOLIO:
       return action.portfolio
     case ADD_STOCK:
       console.log('inside portfolioReducer', action)
-      return action.portfolio
+      return portfolio
     default:
       return portfolio
   }

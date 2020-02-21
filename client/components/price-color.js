@@ -14,11 +14,11 @@ function PriceColor(props) {
   }
   //prop types are numbers
   if (latestPrice > open) {
-    return <div style={green}>{latestPrice}</div>
+    return <span style={green}>{latestPrice}</span>
   } else if (latestPrice < open) {
-    return <h6 style={red}>{latestPrice}</h6>
+    return <span style={red}>{latestPrice}</span>
   } else {
-    return <h6 style={grey}>{latestPrice}</h6>
+    return <span style={grey}>{latestPrice}</span>
   }
 }
 

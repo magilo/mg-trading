@@ -99,8 +99,9 @@ router.get('/:userId/portfolio', async (req, res, next) => {
         }
       ]
     })
+    const userPortfolio = userStocks.stocks
     // console.log('userStocks', userStocks)
-    res.json(userStocks)
+    res.json(userPortfolio)
   } catch (err) {
     next(err)
   }

@@ -2,10 +2,11 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {
-  loadMyStocksThunk,
+  // loadMyStocksThunk,
   loadQuoteThunk,
   loadAllPricesThunk,
-  getTotalValue
+  getTotalValue,
+  loadPortfolioThunk
 } from '../store'
 import PriceColor from './price-color'
 
@@ -14,42 +15,20 @@ import PriceColor from './price-color'
  */
 
 class Portfolio extends Component {
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //     todaysQuotes: [], //idea: store current quote pull here?
-  //     totalValue: 'hello',
-  //     valuation: { totalValue: '' }
-  //   }
-  // }
-
   componentDidMount() {
     // console.log('this.props', this.props)
-    this.props.loadMyStocks(this.props.user)
+    // this.props.loadMyStocks(this.props.user)
+    this.props.loadMyPortfolio(this.props.user)
   }
 
   componentDidUpdate(prevProps) {
-    // Typical usage (don't forget to compare props):
-    // if (this.props.portfolio.length !== prevProps.portfolio.length) {
-    //   // this.fetchData(this.props.userID);
-    //   console.log('didUpdate prev', prevProps.portfolio.length)
-    //   console.log('didUpdate this', this.props.portfolio.length)
-    //   const prices = this.props.loadAllPrices(this.props.portfolio)
-    //   console.log('didupdate prices', prices)
-    // }
-
     /*** checks if portfolio is loaded inorder to load prices ***/
     if (
       Object.keys(this.props.portfolio).length !==
       Object.keys(prevProps.portfolio).length
     ) {
-      // console.log('didUpdate prev', Object.keys(prevProps.portfolio).length)
-      // console.log('didUpdate this', Object.keys(this.props.portfolio).length)
       const prices = this.props.loadAllPrices(this.props.portfolio)
-      // console.log('didupdate prices', prices)
-      // const totalValue = prices.reduce((a, b) => a + b, 0)
     }
-    // console.log('didupdate after if', this.props.prices)
 
     /*** gets total value of portfolio ***/
     if (this.props.prices.length !== prevProps.prices.length) {
@@ -70,51 +49,34 @@ class Portfolio extends Component {
           currentValue.latestPrice * myPortfolio[currentValue.symbol].qty
         )
       }, 0)
-      // console.log(totalValue)
       addedValues = '$' + addedValues.toString()
       allValuations.totalValue = addedValues
       this.props.getValuation(allValuations)
-
-      // console.log('didupdate props values', this.props)
-      // this.setState({ valuation: this.props.valuation })
     }
-
-    // if (
-    //   Object.keys(this.props.valuation).length !==
-    //   Object.keys(prevProps.valuation).length
-    // ) {
-    //   console.log('didUpdate prev', Object.keys(prevProps.valuation).length)
-    //   console.log('didUpdate this', Object.keys(this.props.valuation).length)
-    //   this.setState({ valuation: this.props.valuation })
-    // }
   }
 
   render() {
-    // console.log('portfolio state', this.state)
     const portfolio = this.props.portfolio
     const prices = this.props.prices
-    // console.log('portfolio props', portfolio)
-    // console.log('prices props', this.props.prices)
-    // const valuation = this.props.valuation
-    // console.log('valuation local', this.state.valuation)
     return (
       <div>
         <h3>MY PORTFOLIO {this.props.valuation.totalValue}</h3>
         <div className="QuoteTest">
           {prices.map(stock => (
             <div className="SinglePortfolio" key={stock.symbol}>
-              <h2>
-                {stock.symbol}
-                value: ${portfolio[stock.symbol].qty * stock.latestPrice}
-                qty: {portfolio[stock.symbol].qty}
-                <br />
-                latest price:{' '}
-                <PriceColor
-                  latestPrice={stock.latestPrice}
-                  open={stock.open}
-                  previousClose={stock.previousClose}
-                />
-              </h2>
+              <h4>
+                {stock.symbol} -- {portfolio[stock.symbol].qty} shares @ ${portfolio[
+                  stock.symbol
+                ].qty * stock.latestPrice}
+                <div>
+                  latest price--
+                  <PriceColor
+                    latestPrice={stock.latestPrice}
+                    open={stock.open}
+                    previousClose={stock.previousClose}
+                  />
+                </div>
+              </h4>
             </div>
           ))}
         </div>
@@ -127,24 +89,22 @@ class Portfolio extends Component {
  * CONTAINER
  */
 const mapState = state => {
-  console.log('inside portfolio', state)
+  // console.log('inside portfolio', state)
   return {
     user: state.user,
     portfolio: state.portfolio,
     prices: state.prices,
     valuation: state.valuation
-    // email: state.user.email,
-    // balance: state.user.balance
   }
 }
 
 const mapDispatch = dispatch => {
-  // console.log('mapdispatch', this.state)
   return {
-    loadMyStocks: user => dispatch(loadMyStocksThunk(user)),
+    // loadMyStocks: user => dispatch(loadMyStocksThunk(user)),
     getStock: symbol => dispatch(loadQuoteThunk(symbol)),
     loadAllPrices: portfolio => dispatch(loadAllPricesThunk(portfolio)),
-    getValuation: total => dispatch(getTotalValue(total))
+    getValuation: total => dispatch(getTotalValue(total)),
+    loadMyPortfolio: user => dispatch(loadPortfolioThunk(user))
   }
 }
 
