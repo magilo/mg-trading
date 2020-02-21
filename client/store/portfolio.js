@@ -29,8 +29,9 @@ const getMyPortfolio = portfolio => ({
 //   portfolio
 // })
 
-const addBoughtStock = (stock, quantity) => ({
-  type: ADD_STOCK
+const addBoughtStock = stock => ({
+  type: ADD_STOCK,
+  stock
 })
 
 /**
@@ -65,8 +66,19 @@ export const loadMyStocksThunk = user => async dispatch => {
   }
 }
 
-//  export const buyStockThunk = (quantity) => {
-//    return async dispatch => {
+export const addStockToPortfolioThunk = (
+  user,
+  transaction
+) => async dispatch => {
+  try {
+    const res = await axios.put(`/api/users/${user.id}/portfolio`, transaction)
+    console.log('add stock thunk', res)
+    // dispatch(addBoughtStock(stock, quantity))
+    dispatch(addBoughtStock())
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 /**
  * REDUCER
@@ -74,12 +86,11 @@ export const loadMyStocksThunk = user => async dispatch => {
 export function portfolioReducer(portfolio = {}, action) {
   switch (action.type) {
     case STOCK_OWNED:
-      // console.log('inside portfolioReducer', action)
       return action.portfolio
     case GET_PORTFOLIO:
       return action.portfolio
     case ADD_STOCK:
-      console.log(action.stock)
+      console.log('inside portfolioReducer', action)
       return action.portfolio
     default:
       return portfolio

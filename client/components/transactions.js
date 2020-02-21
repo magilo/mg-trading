@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {userTransactionsThunk} from '../store'
+import {userTransactionsThunk, loadPortfolioThunk} from '../store'
 
 /**
  * COMPONENT
@@ -15,11 +15,13 @@ class Transactions extends React.Component {
   componentDidMount() {
     // console.log('this.props', this.props)
     this.props.loadMyTransactions(this.props.user)
+    this.props.loadMyPortfolio(this.props.user)
   }
 
   render() {
-    console.log('transactions props', this.props.transactions)
+    // console.log('transactions props', this.props.transactions)
     const transactions = this.props.transactions
+    console.log('myPortfolio props', this.props.portfolio)
     return (
       <div>
         <h3>my transactions</h3>
@@ -45,13 +47,15 @@ const mapState = state => {
   // console.log('inside transactions', state)
   return {
     user: state.user,
-    transactions: state.transactions
+    transactions: state.transactions,
+    portfolio: state.portfolio
   }
 }
 
 const mapDispatch = dispatch => {
   return {
-    loadMyTransactions: user => dispatch(userTransactionsThunk(user))
+    loadMyTransactions: user => dispatch(userTransactionsThunk(user)),
+    loadMyPortfolio: user => dispatch(loadPortfolioThunk(user))
   }
 }
 

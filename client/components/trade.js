@@ -1,7 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {loadQuoteThunk, userBalanceUpdate, newTransactionThunk} from '../store'
+import {
+  loadQuoteThunk,
+  userBalanceUpdate,
+  newTransactionThunk,
+  addStockToPortfolioThunk
+} from '../store'
 // import SymbolSearch from './symbol-search'
 
 /**
@@ -72,6 +77,7 @@ class Trade extends React.Component {
         }
         this.props.updateBalance(this.props.user)
         this.props.submitBuy(this.props.user, newTransaction)
+        this.props.updatePortfolio(this.props.user, newTransaction)
       } else {
         errors.stock = 'not enough cash'
       }
@@ -171,7 +177,9 @@ const mapDispatchToProps = dispatch => {
     // submitBuy: quantity => dispatch(buyStock(quantity))
     submitBuy: (user, transaction) =>
       dispatch(newTransactionThunk(user, transaction)),
-    updateBalance: user => dispatch(userBalanceUpdate(user))
+    updateBalance: user => dispatch(userBalanceUpdate(user)),
+    updatePortfolio: (user, transaction) =>
+      dispatch(addStockToPortfolioThunk(user, transaction))
   }
 }
 

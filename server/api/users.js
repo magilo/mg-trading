@@ -62,23 +62,6 @@ router.get('/:userId/transactions', async (req, res, next) => {
 })
 
 router.post('/:userId/transactions', async (req, res, next) => {
-  //check if stock exists on stock model, create if new
-  try {
-    const stock = await Stock.findOrCreate({
-      where: {
-        symbol: req.body.symbol
-      }
-    })
-    console.log('post stock', stock)
-    const boughtStock = await Stock.findOne({where: {symbol: req.body.symbol}})
-    const singleUser = await User.findByPk(req.params.userId)
-    singleUser.addStock(boughtStock)
-    // console.log('post stock', stock)
-    // console.log('boughtstock', boughtStock)
-  } catch (error) {
-    next(error)
-  }
-
   try {
     //create new row on transaction table
     // set the order date
@@ -91,7 +74,7 @@ router.post('/:userId/transactions', async (req, res, next) => {
     })
     //associate newly created transaction w/ user
     const singleUser = await User.findByPk(req.params.userId)
-    transaction.setUser(singleUser)
+    await transaction.setUser(singleUser)
 
     // const updatePortfolio = await Portfolio.
     res.json(transaction) //update this to send status
@@ -102,6 +85,7 @@ router.post('/:userId/transactions', async (req, res, next) => {
 
 router.get('/:userId/portfolio', async (req, res, next) => {
   try {
+    // const userStocks = await singleUser.getStocks()
     const userStocks = await User.findByPk(req.params.userId, {
       include: [
         {
@@ -115,7 +99,7 @@ router.get('/:userId/portfolio', async (req, res, next) => {
         }
       ]
     })
-    console.log('userStocks', userStocks)
+    // console.log('userStocks', userStocks)
     res.json(userStocks)
   } catch (err) {
     next(err)
@@ -124,7 +108,43 @@ router.get('/:userId/portfolio', async (req, res, next) => {
 
 router.put('/:userId/portfolio', async (req, res, next) => {
   try {
-    res.json('hello')
+    const singleUser = await User.findByPk(req.params.userId)
+    // const userStocks = await singleUser.getStocks()
+    // console.log('userStocks', userStocks.length)
+
+    const stock = await Stock.findOrCreate({
+      where: {
+        symbol: req.body.symbol
+      }
+    })
+
+    await singleUser.addStock(stock[0])
+
+    // const nextuserStocks = await singleUser.getStocks()
+    // console.log('nextuserStocks', nextuserStocks.length)
+
+    const selector = {
+      where: {
+        userId: req.params.userId,
+        stockId: stock[0].id
+      }
+    }
+    const currStock = await Portfolio.findOne(selector)
+    const currQty = currStock.qty
+    let newQty
+    // console.log('currQty', typeof (currQty))
+    // console.log('req.body.qty', typeof (req.body.qty))
+
+    if (currQty === null) {
+      newQty = parseInt(req.body.qty)
+    } else {
+      newQty = currQty + parseInt(req.body.qty)
+    }
+
+    await Portfolio.update({qty: newQty}, selector)
+
+    res.sendStatus(200)
+    // res.json('hello')
   } catch (err) {
     next(err)
   }
