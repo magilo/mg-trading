@@ -7,7 +7,6 @@ import {
   newTransactionThunk,
   addStockToPortfolioThunk
 } from '../store'
-// import SymbolSearch from './symbol-search'
 
 /**
  * COMPONENT
@@ -99,10 +98,10 @@ class Trade extends React.Component {
     const balance = this.props.user.balance
     return (
       <div>
-        <h2>TRADE balance: ${balance}</h2>
+        <h2>balance: ${balance}</h2>
         <div>
-          <h5>stock: {stock.symbol}</h5>
-          <h5>latest price: {stock.latestPrice} </h5>
+          <h3>stock: {stock.symbol}</h3>
+          <h3>latest price: {stock.latestPrice} </h3>
         </div>
         <div className="form">
           <form onSubmit={this.handleSearchSubmit}>
@@ -119,7 +118,7 @@ class Trade extends React.Component {
             <div>
               <button type="submit" onSubmit={this.handleSearchSubmit}>
                 {' '}
-                search{' '}
+                submit{' '}
               </button>
             </div>
           </form>
@@ -159,8 +158,6 @@ class Trade extends React.Component {
   }
 }
 
-// export default Trade
-
 const mapStateToProps = state => {
   return {
     stock: state.stock,
@@ -171,10 +168,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    // getStock: symbol => console.log('symbol is:', symbol)
     getStock: symbol => dispatch(loadQuoteThunk(symbol)),
-    // buyStock: quantity => console.log('qunatity', quantity)
-    // submitBuy: quantity => dispatch(buyStock(quantity))
     submitBuy: (user, transaction) =>
       dispatch(newTransactionThunk(user, transaction)),
     updateBalance: user => dispatch(userBalanceUpdate(user)),
@@ -184,53 +178,3 @@ const mapDispatchToProps = dispatch => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Trade)
-/**
- * CONTAINER
- */
-// const mapState = state => {
-//   return {
-//     stock: state.stock
-//   }
-// }
-
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     // editUserThunk: user => dispatch(editUserThunk(user))
-//     getStock: (symbol) => console.log('symbol is:', symbol)
-//   }
-// }
-
-// export default connect(mapState, mapDispatchToProps)(Trade)
-
-/**
- * COMPONENT
- */
-// export const Trade = props => {
-//   // const { email, balance } = props
-//   return (
-//     <div>
-//       <h3>TRADE</h3>
-//       <h6>trade history</h6>
-//     </div>
-//   )
-// }
-
-// /**
-//  * CONTAINER
-//  */
-// const mapState = state => {
-//   console.log(state)
-//   return {
-//     // email: state.user.email,
-//     // balance: state.user.balance
-//   }
-// }
-
-// export default connect(mapState)(Trade)
-
-/**
- * PROP TYPES
- */
-// UserHome.propTypes = {
-//   email: PropTypes.string
-// }

@@ -1,6 +1,6 @@
-const router = require('express').Router()
-const {User, Portfolio} = require('../db/models')
-module.exports = router
+// const router = require('express').Router()
+// const {User, Portfolio} = require('../db/models')
+// module.exports = router
 
 //mounted on api/portfolio
 // router.get('/', async (req, res, next) => {
