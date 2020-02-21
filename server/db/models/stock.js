@@ -1,14 +1,18 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
 
-//holds quantity of each stock inside users portfolio
-
-const Portfolio = db.define('portfolio', {
-  qty: {
-    type: Sequelize.INTEGER
+//holds each stock as a row
+const Stock = db.define('stock', {
+  symbol: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   }
 })
-// const Portfolio = db.define('portfolio', {
+
+// const Stock = db.define('stock', {
 //   symbol: {
 //     type: Sequelize.STRING,
 //     allowNull: false,
@@ -21,4 +25,4 @@ const Portfolio = db.define('portfolio', {
 //   },
 // })
 
-module.exports = Portfolio
+module.exports = Stock

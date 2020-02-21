@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {loadQuoteThunk, userBalanceUpdate} from '../store'
+import {loadQuoteThunk, userBalanceUpdate, newTransactionThunk} from '../store'
 // import SymbolSearch from './symbol-search'
 
 /**
@@ -65,7 +65,13 @@ class Trade extends React.Component {
       if (this.props.user.balance - total >= 0) {
         console.log('can buy')
         this.props.user.balance = this.props.user.balance - total
-        this.props.submitBuy(this.props.user)
+        const newTransaction = {
+          symbol: this.props.stock.symbol,
+          qty: this.state.quantity,
+          purchasePrice: latestPrice
+        }
+        this.props.updateBalance(this.props.user)
+        this.props.submitBuy(this.props.user, newTransaction)
       } else {
         errors.stock = 'not enough cash'
       }
@@ -163,7 +169,9 @@ const mapDispatchToProps = dispatch => {
     getStock: symbol => dispatch(loadQuoteThunk(symbol)),
     // buyStock: quantity => console.log('qunatity', quantity)
     // submitBuy: quantity => dispatch(buyStock(quantity))
-    submitBuy: user => dispatch(userBalanceUpdate(user))
+    submitBuy: (user, transaction) =>
+      dispatch(newTransactionThunk(user, transaction)),
+    updateBalance: user => dispatch(userBalanceUpdate(user))
   }
 }
 

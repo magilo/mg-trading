@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {User, Transaction} = require('../db/models')
+const {User, Transaction, Stock, Portfolio} = require('../db/models')
 
 module.exports = router
 
@@ -62,24 +62,69 @@ router.get('/:userId/transactions', async (req, res, next) => {
 })
 
 router.post('/:userId/transactions', async (req, res, next) => {
+  //check if stock exists on stock model, create if new
   try {
-    //create new row on transaction table and associate w/ user
+    const stock = await Stock.findOrCreate({
+      where: {
+        symbol: req.body.symbol
+      }
+    })
+    console.log('post stock', stock)
+    const boughtStock = await Stock.findOne({where: {symbol: req.body.symbol}})
+    const singleUser = await User.findByPk(req.params.userId)
+    singleUser.addStock(boughtStock)
+    // console.log('post stock', stock)
+    // console.log('boughtstock', boughtStock)
+  } catch (error) {
+    next(error)
+  }
+
+  try {
+    //create new row on transaction table
     // set the order date
     const now = new Date()
-    const formatPrice = req.body.purchasePrice * 100
     const transaction = await Transaction.create({
       symbol: req.body.symbol,
       qty: req.body.qty,
-      purchasePrice: formatPrice,
-      orderDate: now,
-      orderDateTest: now
-      // userId: req.params.userId
+      purchasePrice: req.body.purchasePrice,
+      orderDate: now
     })
-
+    //associate newly created transaction w/ user
     const singleUser = await User.findByPk(req.params.userId)
     transaction.setUser(singleUser)
-    console.log('inside post transactions router')
-    res.json(transaction)
+
+    // const updatePortfolio = await Portfolio.
+    res.json(transaction) //update this to send status
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/:userId/portfolio', async (req, res, next) => {
+  try {
+    const userStocks = await User.findByPk(req.params.userId, {
+      include: [
+        {
+          model: Stock,
+          through: {
+            where: {
+              // userId is a column present at the junction table
+              userId: req.params.userId
+            }
+          }
+        }
+      ]
+    })
+    console.log('userStocks', userStocks)
+    res.json(userStocks)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.put('/:userId/portfolio', async (req, res, next) => {
+  try {
+    res.json('hello')
   } catch (err) {
     next(err)
   }

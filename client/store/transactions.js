@@ -1,6 +1,6 @@
 import axios from 'axios'
 // import { APIToken } from "../../../secrets";
-const {APIToken} = require('../../secrets')
+// const { APIToken } = require('../../secrets')
 
 /**
  * ACTION TYPES
@@ -28,20 +28,21 @@ const addNewTransaction = transaction => ({
 
 export const userTransactionsThunk = user => async dispatch => {
   try {
-    // console.log('inside loadMyStocks')
     const {data} = await axios.get(`/api/users/${user.id}/transactions`)
-
     dispatch(getUserTransactions(data))
   } catch (err) {
     console.error(err)
   }
 }
 
-export const newTransactionThunk = user => async dispatch => {
+export const newTransactionThunk = (user, transaction) => async dispatch => {
   try {
-    // console.log('inside loadMyStocks')
-    const {data} = await axios.post(`/api/users/${user.id}/transactions`)
-    console.log()
+    const {data} = await axios.post(
+      `/api/users/${user.id}/transactions`,
+      transaction
+    )
+    // console.log('inside trans thunk', user, transaction)
+    console.log('trans thunk res', data)
     dispatch(addNewTransaction(data))
   } catch (err) {
     console.error(err)
@@ -54,24 +55,12 @@ export const newTransactionThunk = user => async dispatch => {
 export function transactionReducer(transactions = [], action) {
   switch (action.type) {
     case GET_USER_TRANSACTIONS:
-      console.log('inside trans reducer', action)
       return action.user
     case ADD_TRANSACTION:
-      return action.transactions
+      console.log('trans action', action)
+      console.log('curr trans in reducer', transactions)
+      return [...transactions, action.transaction]
     default:
       return transactions
-  }
-}
-
-export function portfolioReducer(portfolio = [], action) {
-  switch (action.type) {
-    case STOCK_OWNED:
-      // console.log('inside portfolioReducer', action)
-      return action.portfolio
-    case ADD_STOCK:
-      console.log(action.stock)
-      return action.portfolio
-    default:
-      return portfolio
   }
 }

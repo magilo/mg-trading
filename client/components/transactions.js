@@ -27,7 +27,7 @@ class Transactions extends React.Component {
           return (
             <div className="TransactionContainer" key={stock.id}>
               <span>
-                (buy)--{stock.symbol}--{stock.qty} shares @{' '}
+                (buy) -- {stock.symbol} -- {stock.qty} shares @{' '}
                 {stock.purchasePrice} on {stock.orderDate}
               </span>
             </div>
@@ -42,7 +42,7 @@ class Transactions extends React.Component {
  * CONTAINER
  */
 const mapState = state => {
-  console.log('inside transactions', state)
+  // console.log('inside transactions', state)
   return {
     user: state.user,
     transactions: state.transactions
