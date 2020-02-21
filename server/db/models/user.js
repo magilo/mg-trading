@@ -4,7 +4,7 @@ const db = require('../db')
 
 const User = db.define('user', {
   balance: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.FLOAT,
     defaultValue: '500000',
     validate: {
       min: 0

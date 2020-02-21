@@ -15,7 +15,7 @@ const Transaction = db.define('transaction', {
     type: Sequelize.INTEGER
   },
   purchasePrice: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.FLOAT,
     validate: {
       min: 0
     },

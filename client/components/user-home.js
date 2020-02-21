@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
+import Portfolio from './portfolio'
 
 /**
  * COMPONENT
@@ -11,6 +12,7 @@ export const UserHome = props => {
     <div>
       <h3>Welcome, {email}</h3>
       <h3>Balance: ${balance}</h3>
+      <Portfolio />
     </div>
   )
 }

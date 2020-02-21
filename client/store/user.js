@@ -63,10 +63,11 @@ export const logout = () => async dispatch => {
 
 export const userBalanceUpdate = user => async dispatch => {
   try {
-    console.log('inside userBalance')
+    console.log('inside userBalance', user)
+    // const {balance} = user
     const res = await axios.put(`/api/users/${user.id}/balance`, user)
-    console.log('thunk data:', user)
-    console.log('thunk res', res)
+    // console.log('thunk data:', user)
+    // console.log('thunk res', res)
     dispatch(stockBought(user))
   } catch (err) {
     console.error(err)

@@ -15,3 +15,5 @@
 //     next(err)
 //   }
 // })
+
+//stock is fetched through api on frontend, no need for backend

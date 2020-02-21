@@ -21,13 +21,13 @@ export const loadQuoteThunk = symbol => {
   return async dispatch => {
     try {
       // let stock = 'aapl'
-      console.log('symbol', symbol)
+      // console.log('symbol', symbol)
       // let stock = symbol;
       // let APIToken = 'placeholder'
       const {data} = await axios.get(
         `https://cloud.iexapis.com/stable/stock/${symbol}/quote?token=${APIToken}`
       )
-      console.log('inside loadStocksThunk', data)
+      // console.log('inside loadStocksThunk', data)
       dispatch(getQuote(data))
     } catch (error) {
       console.error(error)

@@ -7,6 +7,7 @@ import {
   loadAllPricesThunk,
   getTotalValue
 } from '../store'
+import PriceColor from './price-color'
 
 /**
  * COMPONENT
@@ -106,7 +107,13 @@ class Portfolio extends Component {
                 {stock.symbol}
                 value: ${portfolio[stock.symbol].qty * stock.latestPrice}
                 qty: {portfolio[stock.symbol].qty}
-                latest price: {stock.latestPrice}
+                <br />
+                latest price:{' '}
+                <PriceColor
+                  latestPrice={stock.latestPrice}
+                  open={stock.open}
+                  previousClose={stock.previousClose}
+                />
               </h2>
             </div>
           ))}
