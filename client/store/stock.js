@@ -31,6 +31,7 @@ export const loadQuoteThunk = symbol => {
       dispatch(getQuote(data))
     } catch (error) {
       console.error(error)
+      dispatch(getQuote('nodata'))
     }
   }
 }
