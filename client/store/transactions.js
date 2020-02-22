@@ -1,6 +1,4 @@
 import axios from 'axios'
-// import { APIToken } from "../../../secrets";
-// const { APIToken } = require('../../secrets')
 
 /**
  * ACTION TYPES
@@ -41,8 +39,6 @@ export const newTransactionThunk = (user, transaction) => async dispatch => {
       `/api/users/${user.id}/transactions`,
       transaction
     )
-    // console.log('inside trans thunk', user, transaction)
-    // console.log('trans thunk res', data)
     dispatch(addNewTransaction(data))
   } catch (err) {
     console.error(err)
@@ -57,8 +53,6 @@ export function transactionReducer(transactions = [], action) {
     case GET_USER_TRANSACTIONS:
       return action.user
     case ADD_TRANSACTION:
-      // console.log('trans action', action)
-      // console.log('curr trans in reducer', transactions)
       return [...transactions, action.transaction]
     default:
       return transactions

@@ -58,5 +58,3 @@ const mapDispatch = dispatch => {
 }
 
 export default connect(mapState, mapDispatch)(Transactions)
-
-// export default Transactions
