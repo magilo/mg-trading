@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
+import {Link, Route} from 'react-router-dom'
 import Portfolio from './portfolio'
 
 /**
@@ -12,7 +13,7 @@ export const UserHome = props => {
     <div>
       <h3>Welcome, {email}</h3>
       <h3>Balance: ${balance}</h3>
-      <Portfolio />
+      <Link to="/portfolio">See My Portfolio</Link>
     </div>
   )
 }
