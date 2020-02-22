@@ -7,7 +7,7 @@ import {
   newTransactionThunk,
   addStockToPortfolioThunk
 } from '../store'
-import {hasOnlyDigits} from '../utility-funcs'
+import {hasOnlyDigits, roundThis} from '../utility-funcs'
 
 /**
  * COMPONENT
@@ -25,7 +25,6 @@ class Trade extends React.Component {
         search: ''
       }
     }
-    // console.log('trade compo', this.props)
     this.props = this.props
     this.handleChange = this.handleChange.bind(this)
     this.handleSearchSubmit = this.handleSearchSubmit.bind(this)
@@ -41,8 +40,6 @@ class Trade extends React.Component {
   handleSearchSubmit(event) {
     event.preventDefault()
 
-    // console.log('props in handleStocksubmit', this.props)
-    // console.log('this state in handleStocksubmit: ', this.state)
     this.props.getStock(this.state.stock)
     let errors = this.state.errors
     errors.buy = ''
@@ -56,32 +53,27 @@ class Trade extends React.Component {
 
   handleBuySubmit(event) {
     event.preventDefault()
-    // const { name, value } = event.target;
-    console.log('props in handlesubmit', this.props)
-    console.log('this state in handlesubmit: ', this.state)
 
     let errors = this.state.errors
 
     //add quantity and symbol validation here
     if (!this.props.stock.symbol) {
-      console.log('nostock')
       errors.buy = 'no stock selected'
     } else if (!hasOnlyDigits(this.state.quantity)) {
-      console.log('notnumber')
       errors.buy = 'invalid quantity'
     } else {
-      console.log('there is a stock and quantity is valid')
       errors.buy = ''
       const latestPrice = this.props.stock.latestPrice * 100
       const total = this.state.quantity * latestPrice / 100
       if (this.props.user.balance - total >= 0) {
-        console.log('can buy')
-        this.props.user.balance = this.props.user.balance - total
+        this.props.user.balance = roundThis(this.props.user.balance - total)
+
         const newTransaction = {
           symbol: this.props.stock.symbol,
           qty: this.state.quantity,
           purchasePrice: latestPrice
         }
+
         this.props.updateBalance(this.props.user)
         this.props.submitBuy(this.props.user, newTransaction)
         this.props.updatePortfolio(this.props.user, newTransaction)
@@ -100,14 +92,10 @@ class Trade extends React.Component {
   }
 
   render() {
-    // console.log('trade render', this.props)
     const {errors} = this.state
     const stock = this.props.stock
     const balance = this.props.user.balance
-    // console.log('render', stock)
-    // let errors = this.state.errors
     if (this.props.stock === 'nodata') {
-      console.log('nodata')
       errors.search = 'invalid symbol'
     } else {
       errors.search = ''
@@ -168,13 +156,6 @@ class Trade extends React.Component {
             </div>
           </form>
         </div>
-        {/* <br />
-        <Link to="/home/edit">Edit your account</Link>
-        <br />
-        <Link to="/home/history">Past Orders</Link>
-        <hr /> */}
-
-        {/* <Route path="/home/history" render={() => <OrderHistory />} /> */}
       </div>
     )
   }

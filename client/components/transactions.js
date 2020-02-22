@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {userTransactionsThunk} from '../store'
+import {roundThis} from '../utility-funcs'
 
 /**
  * COMPONENT
@@ -13,14 +14,12 @@ class Transactions extends React.Component {
   }
 
   componentDidMount() {
-    // console.log('this.props', this.props)
     this.props.loadMyTransactions(this.props.user)
   }
 
   render() {
-    // console.log('transactions props', this.props.transactions)
     const transactions = this.props.transactions
-    // console.log('myPortfolio props', this.props.portfolio)
+
     return (
       <div>
         <h3>my transactions</h3>
@@ -29,7 +28,7 @@ class Transactions extends React.Component {
             <div className="TransactionContainer" key={stock.id}>
               <span>
                 (buy) -- {stock.symbol} -- {stock.qty} shares @{' '}
-                {stock.purchasePrice} on {stock.orderDate}
+                {roundThis(stock.purchasePrice)} on {stock.orderDate}
               </span>
             </div>
           )
@@ -43,7 +42,6 @@ class Transactions extends React.Component {
  * CONTAINER
  */
 const mapState = state => {
-  // console.log('inside transactions', state)
   return {
     user: state.user,
     transactions: state.transactions,
