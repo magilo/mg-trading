@@ -5,7 +5,6 @@ const green = {color: 'green'}
 const grey = {color: 'grey'}
 
 function PriceColor(props) {
-  // console.log('pricecolor props', props)
   const latestPrice = props.latestPrice
   let open = props.open
   const previousClose = props.previousClose

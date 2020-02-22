@@ -2,12 +2,12 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {
-  // loadMyStocksThunk,
   loadQuoteThunk,
   loadAllPricesThunk,
   getTotalValue,
   loadPortfolioThunk
 } from '../store'
+import {roundThis} from '../utility-funcs'
 import PriceColor from './price-color'
 
 /**
@@ -16,8 +16,6 @@ import PriceColor from './price-color'
 
 class Portfolio extends Component {
   componentDidMount() {
-    // console.log('this.props', this.props)
-    // this.props.loadMyStocks(this.props.user)
     this.props.loadMyPortfolio(this.props.user)
   }
 
@@ -49,6 +47,7 @@ class Portfolio extends Component {
           currentValue.latestPrice * myPortfolio[currentValue.symbol].qty
         )
       }, 0)
+      addedValues = roundThis(addedValues)
       addedValues = '$' + addedValues.toString()
       allValuations.totalValue = addedValues
       this.props.getValuation(allValuations)
@@ -60,14 +59,15 @@ class Portfolio extends Component {
     const prices = this.props.prices
     return (
       <div>
+        {/* totalValue does not update dynamically right after stock is purchased */}
         <h3>MY PORTFOLIO {this.props.valuation.totalValue}</h3>
         <div className="QuoteTest">
           {prices.map(stock => (
             <div className="SinglePortfolio" key={stock.symbol}>
               <h4>
-                {stock.symbol} -- {portfolio[stock.symbol].qty} shares @ ${portfolio[
-                  stock.symbol
-                ].qty * stock.latestPrice}
+                {stock.symbol} -- {portfolio[stock.symbol].qty} shares @ ${roundThis(
+                  portfolio[stock.symbol].qty * stock.latestPrice
+                )}
                 <div>
                   latest price--
                   <PriceColor
@@ -89,7 +89,6 @@ class Portfolio extends Component {
  * CONTAINER
  */
 const mapState = state => {
-  // console.log('inside portfolio', state)
   return {
     user: state.user,
     portfolio: state.portfolio,
@@ -100,7 +99,6 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    // loadMyStocks: user => dispatch(loadMyStocksThunk(user)),
     getStock: symbol => dispatch(loadQuoteThunk(symbol)),
     loadAllPrices: portfolio => dispatch(loadAllPricesThunk(portfolio)),
     getValuation: total => dispatch(getTotalValue(total)),
