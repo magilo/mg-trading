@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "Some boilerplate code to get you started - get shakin'!",
   "engines": {
-    "node": ">= 7.0.0"
+    "node": "~12.11.1"
   },
   "main": "index.js",
   "scripts": {
@@ -20,8 +20,7 @@
     "start": "node server",
     "start-dev": "NODE_ENV='development' npm run build-client-watch & NODE_ENV='development' npm run start-server",
     "start-server": "nodemon server -e html,js,scss --ignore public --ignore client",
-    "test": "NODE_ENV='test' mocha \"./server/**/*.spec.js\" \"./client/**/*.spec.js\" \"./script/**/*.spec.js\" --require @babel/polyfill --require @babel/register",
-    "heroku-postbuild": "npm run build"
+    "test": "NODE_ENV='test' mocha \"./server/**/*.spec.js\" \"./client/**/*.spec.js\" \"./script/**/*.spec.js\" --require @babel/polyfill --require @babel/register"
   },
   "husky": {
     "hooks": {
@@ -42,7 +41,7 @@
   "author": "Fullstack Academy of Code",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.21.2",
+    "axios": "^0.19.0",
     "compression": "^1.7.3",
     "connect-session-sequelize": "^6.0.0",
     "express": "^4.16.4",
@@ -51,7 +50,7 @@
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-google-oauth": "^2.0.0",
-    "pg": "^7.9.0",
+    "pg": "^8.3.2",
     "pg-hstore": "^2.3.2",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
@@ -61,9 +60,8 @@
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "sequelize": "^5.22.5",
-    "sequelize-cli": "^6.4.1",
-    "socket.io": "^2.4.0"
+    "sequelize": "^5.3.1",
+    "socket.io": "^2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
@@ -102,7 +100,7 @@
     "redux-mock-store": "^1.5.3",
     "simple-git": "^1.121.0",
     "supertest": "^4.0.2",
-    "webpack": "^4.46.0",
+    "webpack": "^4.16.4",
     "webpack-cli": "^3.1.0",
     "yaml": "^1.6.0"
   }
