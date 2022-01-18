@@ -14,3 +14,6 @@ Deployed at https://mg-trading.herokuapp.com/
 
 * total portfolio value doesn't update dynamically after a stock is purchased -- refresh page to update
 * store history does not clear after a user logs out and next logged in user is using previous user's store for stocks and prices -- refresh page to clear
+
+### Database Schema
+![Untitled Diagram](https://user-images.githubusercontent.com/53962625/75084582-ffdf5f00-54ee-11ea-9e23-3a3d50294c52.png)
